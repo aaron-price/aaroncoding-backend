@@ -30,7 +30,6 @@ var createUser = function(db, req, callback) {
 router.post('/new', (req, res) => {
     MongoClient.connect(mlabUri, function(err, db) {
         assert.equal(null, err);
-        console.log("3")
         createUser(db, req, function() {
             db.close();
         });
@@ -39,7 +38,7 @@ router.post('/new', (req, res) => {
 
 /* GET users listing. */
 router.get('/new', function(req, res, next) {
-    coll.find().toArray(function(err, docs) {
+    coll.find().toArray(function (err, docs) {
         res.json({message: docs})
     })
     db.close()
