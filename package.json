@@ -3,7 +3,7 @@
   "version": "2.0.0",
   "private": true,
   "scripts": {
-    "start": "nodemon ./bin/www"
+    "start": "node_modules/nodemon/bin/nodemon.js ./bin/www"
   },
   "dependencies": {
     "body-parser": "^1.17.1",
@@ -19,6 +19,7 @@
     "mongoose": "^4.9.7",
     "morgan": "~1.7.0",
     "mysql": "^2.13.0",
+    "nodemon": "^1.11.0",
     "passport": "^0.3.2",
     "passport-local": "^1.0.0",
     "serve-favicon": "~2.3.0"
