@@ -11,8 +11,9 @@ const demo = require('./routes/demo');
 const cors = require('cors')
 var app = express();
 
-// Allow cors for /api/demo
+// Allow cors
 app.use('/api/demo', cors());
+app.use("/api/users", cors());
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
