@@ -3,6 +3,7 @@ var path = require('path');
 var favicon = require('serve-favicon');
 var logger = require('morgan');
 var cookieParser = require('cookie-parser');
+var cookieSession = require('cookie-session')
 var bodyParser = require('body-parser');
 
 var routes = require('./routes/index');
@@ -10,6 +11,18 @@ var users = require('./routes/users');
 const demo = require('./routes/demo');
 const cors = require('cors')
 var app = express();
+
+var MongoClient = require('mongodb').MongoClient
+require("dotenv").config()
+var URL = process.env.MONGODB_URI
+var ObjectId = require('mongodb').ObjectID
+var passport = require('passport')
+var LocalStrategy = require('passport-local').Strategy;
+
+
+
+
+
 
 // Allow cors
 app.use('/api/demo', cors());
@@ -26,6 +39,18 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
+
+app.use(cookieSession({
+    name: 'session',
+    keys: ["I am top secret!"],
+
+    // Cookie Options
+    maxAge: 24 * 60 * 60 * 1000 // 24 hours
+}))
+app.use(passport.initialize());
+app.use(passport.session());
+
+
 
 app.use('/', routes);
 app.use('/api/users', users);
