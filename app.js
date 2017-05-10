@@ -6,6 +6,7 @@ var cookieParser = require('cookie-parser');
 var cookieSession = require('cookie-session')
 var bodyParser = require('body-parser');
 
+var authRoutes = require('./routes/auth');
 var routes = require('./routes/index');
 var users = require('./routes/users');
 const demo = require('./routes/demo');
@@ -21,12 +22,10 @@ var LocalStrategy = require('passport-local').Strategy;
 
 
 
-
-
-
 // Allow cors
 app.use('/api/demo', cors());
 app.use("/api/users", cors());
+app.use("/api/auth", cors());
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -53,6 +52,7 @@ app.use(passport.session());
 
 
 app.use('/', routes);
+app.use('/api/auth', authRoutes);
 app.use('/api/users', users);
 app.use('/api/demo', demo);
 
