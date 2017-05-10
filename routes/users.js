@@ -44,12 +44,4 @@ router.get('/new', function(req, res, next) {
     db.close()
 });
 
-
-
-
-
-
-
-
-
 module.exports = router;
