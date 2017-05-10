@@ -49,12 +49,10 @@ app.use(cookieSession({
 app.use(passport.initialize());
 app.use(passport.session());
 
-
-
-app.use('/', routes);
 app.use('/api/auth', authRoutes);
 app.use('/api/users', users);
 app.use('/api/demo', demo);
+app.use('/', routes);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

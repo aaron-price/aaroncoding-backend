@@ -10,9 +10,12 @@ router.post('/signup', function(req, res) {
     const name = req.body.name
     const email = req.body.email
     const password = req.body.password
+    console.log(`SIGNUP REQUEST FROM ${name}`)
 
     createUser({name, password, email})
+    console.log(`CREATED USER`)
     MongoClient.connect(URL, function(err, db) {
+        console.log("CONNECTED TO DB")
         if (err) return
         var Users = db.collection('users')
         setTimeout(()=>{
