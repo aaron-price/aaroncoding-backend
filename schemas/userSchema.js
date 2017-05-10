@@ -6,5 +6,5 @@ const userSchema = mongoose.Schema({
     email: { type: String, required: true, dropDups: true },
 });
 
-const userModel = mongoose.model('UserModel', userSchema);
+const userModel = mongoose.model('users', userSchema);
 module.exports = userModel

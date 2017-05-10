@@ -3,6 +3,7 @@ let assert = require('assert');
 let router = express.Router();
 const mongoose = require('mongoose');
 let passport = require('passport')
+let goose = require('../db')
 const userModel = require("../schemas/userSchema")
 // const { createUser, listUsers } = require("../CrudFunctions/userFunctions")
 let MongoClient = require('mongodb').MongoClient
@@ -30,12 +31,21 @@ router.post('/signup', function(req, res) {
     const name = req.body.name
     const email = req.body.email
     const password = req.body.password
-    console.log(1)
-    let newUser = new userModel({name, email, password})
-    console.log(2)
-    newUser.save(err => {
+    // console.log(1)
+    const User = mongoose.model("users")
+    // console.log(2)
+    User.create({
+        name,
+        password,
+        email,
+    }, function(err, user) {
         assert.equal(null, err);
-        console.log(`Created new user: ${name}`)
+        user.save(function (err, createdUser){
+            assert.equal(null, err);
+            // res.send(user)
+            // console.log("Created new user")
+            // console.log(createdUser)
+        })
     })
 })
 
