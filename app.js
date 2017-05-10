@@ -5,21 +5,25 @@ var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var cookieSession = require('cookie-session')
 var bodyParser = require('body-parser');
-
-var authRoutes = require('./routes/auth');
-var routes = require('./routes/index');
-var users = require('./routes/users');
-const demo = require('./routes/demo');
-const cors = require('cors')
-var app = express();
-
 var MongoClient = require('mongodb').MongoClient
 require("dotenv").config()
 var URL = process.env.MONGODB_URI
 var ObjectId = require('mongodb').ObjectID
 var passport = require('passport')
 var LocalStrategy = require('passport-local').Strategy;
+const cors = require('cors')
 
+// import schemas and models
+const mongoose = require('mongoose');
+require("./schemas/userSchema")
+
+// import routes
+var authRoutes = require('./routes/auth');
+var routes = require('./routes/index');
+var users = require('./routes/users');
+const demo = require('./routes/demo');
+
+var app = express();
 
 
 // Allow cors

@@ -1,32 +1,67 @@
-var express = require('express');
-var router = express.Router();
-var passport = require('passport')
-const { createUser } = require("../CrudFunctions/userFunctions")
-var MongoClient = require('mongodb').MongoClient
+let express = require('express');
+let assert = require('assert');
+let router = express.Router();
+const mongoose = require('mongoose');
+let passport = require('passport')
+const userModel = require("../schemas/userSchema")
+// const { createUser, listUsers } = require("../CrudFunctions/userFunctions")
+let MongoClient = require('mongodb').MongoClient
 require("dotenv").config()
 const URL = process.env.MONGODB_URI
+
+let mongodb
+MongoClient.connect(URL, {
+    poolSize: 5, // Default: 5
+}, function(err, db) {
+    mongodb = db
+})
+
+
+
+router.get('/list', function(req, res) {
+    let Users = mongodb.collection('users')
+    Users.find().toArray(function(err, docs) {
+        assert.equal(null, err);
+        res.json({message: docs})
+    })
+})
 
 router.post('/signup', function(req, res) {
     const name = req.body.name
     const email = req.body.email
     const password = req.body.password
-    console.log(`SIGNUP REQUEST FROM ${name}`)
-
-    createUser({name, password, email})
-    console.log(`CREATED USER`)
-    MongoClient.connect(URL, function(err, db) {
-        console.log("CONNECTED TO DB")
-        if (err) return
-        var Users = db.collection('users')
-        setTimeout(()=>{
-            Users.find().toArray(function(err, docs) {
-                res.json([{message: docs}])
-                db.close()
-            })},1500)
+    console.log(1)
+    let newUser = new userModel({name, email, password})
+    console.log(2)
+    newUser.save(err => {
+        assert.equal(null, err);
+        console.log(`Created new user: ${name}`)
     })
+})
 
-    res.json([{message: `Created account for ${name}`}]);
-});
+
+
+// router.post('/signup', function(req, res) {
+//     const name = req.body.name
+//     const email = req.body.email
+//     const password = req.body.password
+//     console.log(`SIGNUP REQUEST FROM ${name}`)
+//
+//     createUser({name, password, email})
+//     console.log(`CREATED USER`)
+//     MongoClient.connect(URL, function(err, db) {
+//         console.log("CONNECTED TO DB")
+//         assert.equal(null, err);
+//         let Users = db.collection('users')
+//         setTimeout(()=>{
+//             Users.find().toArray(function(err, docs) {
+//                 res.json([{message: docs}])
+//                 db.close()
+//             })},1500)
+//     })
+//
+//     res.json([{message: `Created account for ${name}`}]);
+// });
 /*
 router.post('/login',
     passport.authenticate('local'),
