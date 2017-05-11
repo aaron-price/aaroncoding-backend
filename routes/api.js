@@ -9,8 +9,6 @@ var User = require("../models/user");
 var Book = require("../models/book");
 
 router.post('/signup', function(req, res) {
-    console.log("Pinged /signup")
-    console.log(req.body)
   if (!req.body.username || !req.body.password) {
     res.json({success: false, msg: 'Please pass username and password.'});
   } else {
@@ -21,8 +19,10 @@ router.post('/signup', function(req, res) {
     // save the user
     newUser.save(function(err) {
       if (err) {
+        console.log("ERROR " + err)
         return res.json({success: false, msg: 'Username already exists.'});
       }
+      console.log("Successful created new user: " + req.body.username)
       res.json({success: true, msg: 'Successful created new user.'});
     });
   }
