@@ -3,37 +3,27 @@ var path = require('path');
 var favicon = require('serve-favicon');
 var logger = require('morgan');
 var cookieParser = require('cookie-parser');
-var cookieSession = require('cookie-session')
 var bodyParser = require('body-parser');
-var MongoClient = require('mongodb').MongoClient
-require("dotenv").config()
-var URL = process.env.MONGODB_URI
-var ObjectId = require('mongodb').ObjectID
-var passport = require('passport')
-var LocalStrategy = require('passport-local').Strategy;
-const cors = require('cors')
+var morgan = require('morgan');
+var mongoose = require('mongoose');
+var passport = require('passport');
+var config = require('./config/database');
 
-// import schemas and models
-const mongoose = require('mongoose');
-require("./schemas/userSchema")
+mongoose.connect(config.database);
 
-// import routes
-var authRoutes = require('./routes/auth');
-var routes = require('./routes/index');
-var users = require('./routes/users');
-const demo = require('./routes/demo');
+var api = require('./routes/api');
 
 var app = express();
-
-
-// Allow cors
-app.use('/api/demo', cors());
-app.use("/api/users", cors());
-app.use("/api/auth", cors());
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'jade');
+
+app.use(function(req, res, next) {
+    res.header("Access-Control-Allow-Origin", "*");
+    res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept, Authorization");
+    next();
+});
 
 // uncomment after placing your favicon in /public
 //app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
@@ -42,52 +32,31 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
-
-app.use(cookieSession({
-    name: 'session',
-    keys: ["I am top secret!"],
-
-    // Cookie Options
-    maxAge: 24 * 60 * 60 * 1000 // 24 hours
-}))
+app.use(morgan('dev'));
 app.use(passport.initialize());
-app.use(passport.session());
 
-app.use('/api/auth', authRoutes);
-app.use('/api/users', users);
-app.use('/api/demo', demo);
-app.use('/', routes);
+app.get('/', function(req, res) {
+    res.send("Hello, are you lost? This is really more of a backend api server, you aren't supposed to see this.");
+});
+
+app.use('/api', api);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
-  var err = new Error('Not Found');
-  err.status = 404;
-  next(err);
+    var err = new Error('Not Found');
+    err.status = 404;
+    next(err);
 });
 
-// error handlers
-
-// development error handler
-// will print stacktrace
-if (app.get('env') === 'development') {
-  app.use(function(err, req, res, next) {
-    res.status(err.status || 500);
-    res.render('error', {
-      message: err.message,
-      error: err
-    });
-  });
-}
-
-// production error handler
-// no stacktraces leaked to user
+// error handler
 app.use(function(err, req, res, next) {
-  res.status(err.status || 500);
-  res.render('error', {
-    message: err.message,
-    error: {}
-  });
-});
+    // set locals, only providing error in development
+    res.locals.message = err.message;
+    res.locals.error = req.app.get('env') === 'development' ? err : {};
 
+    // render the error page
+    res.status(err.status || 500);
+    res.render('error');
+});
 
 module.exports = app;
