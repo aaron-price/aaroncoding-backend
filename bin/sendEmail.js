@@ -12,7 +12,6 @@ function validateText(text, min = 2) {
     )
 }
 
-
 function sendEmail(from, to, subject, body) {
     console.log("Sending email from: " + from + " to: " + to)
     const fromEmail = new helper.Email(from);
