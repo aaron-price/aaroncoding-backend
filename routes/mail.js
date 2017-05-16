@@ -18,18 +18,10 @@ router.post('/', function(req, res) {
     } else {
         // Handle errors
         let err = []
-        if (!validateEmail(from)) {
-            err.push({id: 0, body: "Invalid 'from' email"})
-        }
-        if (!validateEmail(to)) {
-            err.push({id: 1, body: "Invalid 'to' email"})
-        }
-        if (!validateText(subject)) {
-            err.push({id: 2, body: "Invalid subject"})
-        }
-        if (!validateText(body)) {
-            err.push({id: 3, body: "Invalid body contents"})
-        }
+        if (!validateEmail(from)) { err.push({id: 0, body: "Invalid 'from' email"}) }
+        if (!validateEmail(to)) { err.push({id: 1, body: "Invalid 'to' email"}) }
+        if (!validateText(subject)) { err.push({id: 2, body: "Invalid subject"}) }
+        if (!validateText(body)) { err.push({id: 3, body: "Invalid body contents"}) }
         if (err.length > 0) {
             // Don't send email, just explain error
             res.status(401).json(err)
