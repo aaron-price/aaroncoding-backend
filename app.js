@@ -12,6 +12,7 @@ var config = require('./config/database');
 mongoose.connect(config.database);
 
 var api = require('./routes/api');
+var mail = require('./routes/mail');
 
 var app = express();
 
@@ -21,7 +22,10 @@ app.set('view engine', 'jade');
 
 app.use(function(req, res, next) {
     res.header("Access-Control-Allow-Origin", "*");
-    res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept, Authorization");
+    // Not sure whether this is necessary. It seems to mess with the other ajax though.
+    // res.header("Access-Control-Allow-Origin", "https://sendgrid.com");
+    res.header("Access-Control-Allow-Headers",
+        "Origin, X-Requested-With, Content-Type, Accept, Authorization, On-behalf-of, x-sg-elas-acl");
     next();
 });
 
@@ -40,6 +44,7 @@ app.get('/', function(req, res) {
 });
 
 app.use('/api', api);
+app.use('/mail', mail);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
