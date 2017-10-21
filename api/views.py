@@ -1,0 +1,42 @@
+from rest_framework.authentication import TokenAuthentication
+from rest_framework import filters
+from rest_framework.authtoken.serializers import AuthTokenSerializer
+from rest_framework.authtoken.views import ObtainAuthToken
+from rest_framework import viewsets
+from rest_framework.permissions import IsAuthenticated, AllowAny
+from rest_framework.authtoken.models import Token
+from rest_framework.response import Response
+from django.http import JsonResponse
+import json
+from . import serializers
+from . import models
+from . import permissions
+
+class UserProfileViewSet(viewsets.ModelViewSet):
+    serializer_class = serializers.UserProfileSerializer
+    queryset = models.UserProfile.objects.all()
+    authentication_classes = (TokenAuthentication,)
+    permission_classes = (
+        permissions.UpdateOwnProfile,
+        permissions.UserPermissions,
+    )
+
+class LoginViewSet(ObtainAuthToken):
+    def post(self, request, *args, **kwargs):
+        response = super(LoginViewSet, self).post(request, *args, **kwargs)
+        token = Token.objects.get(key=response.data['token'])
+        user = models.UserProfile.objects.filter(id=token.user_id).first()
+
+        return Response({
+            'token': token.key,
+            'id': token.user_id,
+            'name': request.data.get('username'),
+            'is_staff': user.is_staff,
+            'is_superuser': user.is_superuser,
+            'is_active': user.is_active,
+        })
+
+def PingView(request):
+    return JsonResponse({
+        "message": 'Hey there!'
+    })
