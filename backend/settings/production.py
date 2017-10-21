@@ -144,4 +144,4 @@ import dj_database_url
 db_from_env = dj_database_url.config(conn_max_age=500)
 DATABASES['default'].update(db_from_env)
 
-# CORS_ORIGIN_WHITELIST = ('your-frontend-app.herokuapp.com',)
+CORS_ORIGIN_WHITELIST = ('aaroncoding-frontend.herokuapp.com', 'aaroncoding.com',)
