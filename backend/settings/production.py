@@ -25,7 +25,7 @@ SECRET_KEY = '1e@^lcw@q$csp0sbh3!txrc(y1j#a4dsebu4-kyiin=$2#gg11'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['blooming-sands-21462.herokuapp.com']
 
 
 # Application definition
@@ -36,7 +36,7 @@ INSTALLED_APPS = [
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
-    'django.contrib.staticfiles', 
+    'django.contrib.staticfiles',
 	'api',
 	'rest_framework',
 	'rest_framework.authtoken',
@@ -133,7 +133,7 @@ REST_FRAMEWORK = {
     ),
     'DEFAULT_PERMISSION_CLASSES': (
         'rest_framework.permissions.IsAuthenticatedOrReadOnly',
-    ), 
+    ),
     'DEFAULT_RENDERER_CLASSES': (
         'rest_framework.renderers.JSONRenderer',
         'utils.renderers.BrowsableAPIRendererWithoutForms',
